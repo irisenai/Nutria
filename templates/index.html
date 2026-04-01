@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nutr.IA - Seu Plano Alimentar Inteligente</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Cinza azulado bem leve */
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* 1. Refinamento do Hero e Bolha Verde */
+        .hero-section {
+            position: relative;
+            background: linear-gradient(135deg, #064e3b 0%, #065f46 100%);
+            height: 65vh; /* Aumentado para dar mais impacto */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            overflow: hidden; /* Garante que a bolha não saia */
+        }
+
+        .hero-blob {
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 70%;
+            height: 120%;
+            background: rgba(16, 185, 129, 0.4); /* Verde esmeralda suave */
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+        }
+
+        /* 2. Refinamento do Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 35px 0 rgba(31, 38, 135, 0.04);
+        }
+
+        /* 3. Inputs e Checkboxes Estilizados */
+        input[type="text"], select {
+            background: #ffffff !important;
+            border: 1px solid #e2e8f0 !important;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]:focus, select:focus {
+            border-color: #10b981 !important;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.1) !important;
+        }
+
+        /* Efeito de tag para checkboxes */
+        .cat-box label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            background: #f8fafc;
+            border-radius: 99px;
+            border: 1px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .cat-box label:hover {
+            background: #f1f5f9;
+            transform: translateY(-1px);
+        }
+
+        .cat-box input[type="checkbox"]:checked + span {
+            color: #16a34a;
+            font-weight: 600;
+        }
+
+        .cat-box input[type="checkbox"] {
+            accent-color: #16a34a;
+            width: 1.1rem;
+            height: 1.1rem;
+        }
+
+        /* 4. Timeline e Receitas com Cara de "SaaS" */
+        .recipe-title {
+            font-weight: 800;
+            display: block;
+            margin-bottom: 5px;
+            color: #16a34a;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .meal-list li {
+            position: relative;
+            padding-left: 1.2rem;
+            font-size: 0.875rem;
+            color: #475569; /* slate-600 */
+        }
+        
+        .meal-list li::before {
+            content: "•";
+            color: #16a34a;
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .point-content {
+            border-radius: 1.25rem;
+            border: 1px solid #f1f5f9;
+        }
+
+        .point-dot {
+            width: 28px; height: 28px;
+            background-color: #16a34a;
+            border: 4px solid white;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .timeline-line {
+            background-color: #e2e8f0;
+        }
+
+        /* Ajuste para um dia embaixo do outro */
+        .day-section {
+            margin-bottom: 5rem;
+            border-bottom: 2px dashed #cbd5e1;
+            padding-bottom: 5rem;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+
+    <div class="fixed top-10 -left-20 w-96 h-96 bg-emerald-400 rounded-full mix-blend-multiply filter blur-[100px] opacity-25 animate-pulse -z-10"></div>
+    <div class="fixed top-40 right-0 w-80 h-80 bg-cyan-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-25 -z-10"></div>
+    <div class="fixed bottom-10 left-1/3 w-64 h-64 bg-green-300 rounded-full mix-blend-multiply filter blur-[80px] opacity-20 -z-10"></div>
+
+    <header class="hero-section flex items-center justify-center text-center">
+        <div class="hero-blob"></div>
+
+        <img src="{{ url_for('static', filename='prato_saudavel.png') }}"
+             alt="Prato saudável de abacate e ovo" 
+             class="absolute top-12 right-[-60px] h-[150%] object-contain z-10 
+                    drop-shadow-[20px_20px_60px_rgba(0,0,0,0.18)] 
+                    hidden md:block"> 
+            <div data-aos="zoom-in" class="relative z-20 mb-32">
+            <h1 class="text-6xl md:text-9xl font-black text-white drop-shadow-lg tracking-tighter">
+                Nutr<span class="text-emerald-400">.</span>IA
+            </h1>
+            <p class="text-emerald-100 font-medium tracking-widest uppercase text-sm mt-3">Inteligência Artificial Alimentar</p>
+        </div>
+    </header>
+
+    <main class="relative max-w-6xl mx-auto -mt-68 px-4 pb-20 z-10">
+        <img src="" alt="" 
+             class="absolute top-[-100px] right-[-120px] h-[300px] object-contain z-[-1] opacity-90 hidden lg:block"
+             data-aos="fade-left" data-aos-delay="300">
+
+        <img src="{{ url_for('static', filename='folha.png') }}" alt="Ingrediente solto" 
+             class="absolute bottom-[20%] left-[-150px] h-[350px] object-contain z-[-1] opacity-75 hidden lg:block" 
+             data-aos="fade-right" data-aos-delay="500">
+
+         <img src="{{ url_for('static', filename='cogumelo.png') }}" 
+             class="absolute top-[70%] right-[-100px] h-32 w-auto z-[-1] opacity-80 -rotate-12 hidden lg:block" 
+             data-aos="fade-left">
+
+         <img src="{{ url_for('static', filename='brocolis.png') }}" 
+             class="absolute bottom-[3%] right-[5%] h-24 w-auto z-[-1] opacity-70 rotate-90 hidden lg:block" 
+             data-aos="zoom-in">
+
+         <img src="{{ url_for('static', filename='tomates.png') }}" 
+             class="absolute bottom-[70%] right-[70%] h-80 w-auto z-[-1] opacity-70 rotate-90 hidden lg:block" 
+             data-aos="zoom-in">
+
+
+        <fieldset id="form-lock">
+            <div class="glass p-8 rounded-3xl shadow-2xl mb-10" data-aos="fade-up">
+                <h2 class="text-2xl font-black mb-6 text-green-800 uppercase">1. IMC E OBJETIVO</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="flex flex-col">
+                        <label class="text-xs font-bold text-slate-500 mb-1 ml-2 uppercase">Peso (KG)</label>
+                        <input type="text" id="peso" placeholder="(Ex: 80.5)" class="p-4 rounded-2xl outline-none transition-all">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs font-bold text-slate-500 mb-1 ml-2 uppercase">Altura (M)</label>
+                        <input type="text" id="altura" placeholder="(Ex: 1.75)" class="p-4 rounded-2xl outline-none transition-all">
+                    </div>
+                    <div class="flex flex-col">
+                        <label class="text-xs font-bold text-slate-500 mb-1 ml-2 uppercase">Qual seu objetivo?</label>
+                        <select id="objetivo" class="p-4 rounded-2xl outline-none transition-all font-bold text-green-700">
+                            <option value="Ganhar Massa Muscular">Ganhar Massa</option>
+                            <option value="Emagrecer de forma saudável">Emagrecer</option>
+                            <option value="Manter o peso e saúde">Manter Peso</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="glass p-8 rounded-3xl shadow-2xl mb-10" data-aos="fade-up">
+                <h2 class="text-2xl font-black mb-8 text-green-800 uppercase">2. Preferência Alimentar</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="cat-box" data-cat="Proteínas">
+                        <h3 class="font-black text-green-600 mb-4 text-sm uppercase">Proteínas</h3>
+                        <div class="grid gap-2 text-sm">
+                            <label><input type="checkbox" value="Frango"> <span>Frango</span></label>
+                            <label><input type="checkbox" value="Patinho"> <span>Patinho</span></label>
+                            <label><input type="checkbox" value="Ovos"> <span>Ovos</span></label>
+                            <label><input type="checkbox" value="Tilápia"> <span>Tilápia</span></label>
+                            <label><input type="checkbox" value="Tofu"> <span>Tofu</span></label>
+                        </div>
+                    </div>
+                    <div class="cat-box" data-cat="Carboidratos">
+                        <h3 class="font-black text-green-600 mb-4 text-sm uppercase">Carbos</h3>
+                        <div class="grid gap-2 text-sm">
+                            <label><input type="checkbox" value="Arroz Integral"> <span>Arroz Integral</span></label>
+                            <label><input type="checkbox" value="Aveia"> <span>Aveia</span></label>
+                            <label><input type="checkbox" value="Quinoa"> <span>Quinoa</span></label>
+                            <label><input type="checkbox" value="Pão Integral"> <span>Pão Integral</span></label>
+                            <label><input type="checkbox" value="Tapioca"> <span>Tapioca</span></label>
+                        </div>
+                    </div>
+                    <div class="cat-box" data-cat="Legumes">
+                        <h3 class="font-black text-green-600 mb-4 text-sm uppercase">Legumes</h3>
+                        <div class="grid gap-2 text-sm">
+                            <label><input type="checkbox" value="Brócolis"> <span>Brócolis</span></label>
+                            <label><input type="checkbox" value="Espinafre"> <span>Espinafre</span></label>
+                            <label><input type="checkbox" value="Cenoura"> <span>Cenoura</span></label>
+                            <label><input type="checkbox" value="Inhame"> <span>Inhame</span></label>
+                            <label><input type="checkbox" value="Batata"> <span>Batata</span></label>
+                        </div>
+                    </div>
+                    <div class="cat-box" data-cat="Leguminosas">
+                        <h3 class="font-black text-green-600 mb-4 text-sm uppercase">Leguminosas</h3>
+                        <div class="grid gap-2 text-sm">
+                            <label><input type="checkbox" value="Feijão"> <span>Feijão</span></label>
+                            <label><input type="checkbox" value="Lentilha"> <span>Lentilha</span></label>
+                            <label><input type="checkbox" value="Grão de Bico"> <span>Grão de Bico</span></label>
+                            <label><input type="checkbox" value="Ervilha"> <span>Ervilha</span></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button onclick="gerar()" id="btn-gerar" 
+                class="mt-12 w-full bg-gradient-to-r from-green-600 to-emerald-500 text-white font-black py-6 rounded-3xl 
+                       hover:from-green-700 hover:to-emerald-600 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 uppercase tracking-widest">
+                Gerar Plano Semanal
+            </button>
+        </fieldset>
+
+        <div id="resultado" class="hidden glass p-10 rounded-[3rem] shadow-2xl transition-all">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-12 gap-6 border-b pb-8">
+                <div>
+                    <select id="select-semana" class="text-3xl font-black bg-transparent text-slate-900 border-2 border-slate-200 p-2 rounded-xl outline-none uppercase italic">
+                        <option value="1">Semana 01</option>
+                    </select>
+                    <div id="imc-display" class="mt-3 text-green-700 font-bold uppercase text-xs"></div>
+                </div>
+                <button onclick="baixarPDF()" class="bg-slate-900 hover:bg-black text-white px-10 py-5 rounded-2xl font-black transition shadow-lg">
+                    BAIXAR PDF ↓
+                </button>
+            </div>
+            
+            <div class="timeline-container px-4">
+                <div class="timeline-line hidden md:block"></div>
+                <div class="timeline-point" id="p-cafe"><div class="point-dot"></div><div class="point-content"></div></div>
+                <div class="timeline-point" id="p-almoco"><div class="point-dot"></div><div class="point-content"></div></div>
+                <div class="timeline-point" id="p-janta"><div class="point-dot"></div><div class="point-content"></div></div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true });
+        
+        let cardapioSemanal = {};
+        let textoCardapioGlobal = ""; // Para guardar o texto e gerar o PDF
+
+        async function gerar() {
+            const btn = document.getElementById('btn-gerar');
+            const lock = document.getElementById('form-lock');
+            const preferencias = {};
+            
+            document.querySelectorAll('.cat-box').forEach(box => {
+                preferencias[box.dataset.cat] = Array.from(box.querySelectorAll('input:checked')).map(i => i.value);
+            });
+
+            btn.innerText = "PROCESSANDO...";
+            btn.disabled = true;
+            lock.disabled = true;
+
+            try {
+                const response = await fetch('/gerar-cardapio', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        peso: document.getElementById('peso').value,
+                        altura: document.getElementById('altura').value,
+                        objetivo: document.getElementById('objetivo').value,
+                        preferencias: preferencias
+                    })
+                });
+
+                const data = await response.json();
+                if(data.cardapio) {
+                    textoCardapioGlobal = data.cardapio; 
+                    processarComRegex(data.cardapio);
+                    document.getElementById('imc-display').innerText = `IMC CALCULADO: ${data.imc}`;
+                    document.getElementById('resultado').classList.remove('hidden');
+                    
+                    // Pequeno delay para garantir que o AOS funcione na rolagem
+                    setTimeout(() => {
+                        document.getElementById('resultado').scrollIntoView({ behavior: 'smooth' });
+                    }, 100);
+                } else if(data.error) {
+                    alert(`Erro da IA: ${data.error}`);
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Erro ao conectar com o servidor.");
+            } finally {
+                btn.innerText = "Gerar Plano Semanal";
+                btn.disabled = false;
+                lock.disabled = false;
+            }
+        }
+
+        async function baixarPDF() {
+            if (!textoCardapioGlobal) {
+                alert("Primeiro, gere um cardápio clicando no botão 'Gerar Plano Semanal'.");
+                return;
+            }
+
+            const btn = document.querySelector('button[onclick="baixarPDF()"]');
+            btn.innerText = "GERANDO...";
+
+            try {
+                const response = await fetch('/exportar-pdf', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ conteudo: textoCardapioGlobal })
+                });
+
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = "cardapio_nutria.pdf";
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    a.remove();
+                } else {
+                    alert("Erro ao gerar o arquivo no servidor.");
+                }
+            } catch (e) {
+                console.error(e);
+                alert("Erro na conexão.");
+            } finally {
+                btn.innerText = "BAIXAR PDF ↓";
+            }
+        }
+
+        function processarComRegex(texto) {
+            const container = document.getElementById('resultado');
+            const header = container.querySelector('.flex.justify-between');
+            container.innerHTML = '';
+            container.appendChild(header);
+
+            const blocos = texto.split(/---+/);
+            
+            blocos.forEach(bloco => {
+                if (!bloco.includes('Dia:')) return;
+
+                const nomeDia = bloco.match(/Dia:\s*(.*)/)?.[1]?.trim();
+                const kcal = bloco.match(/Calorias Totais:\s*(.*)/)?.[1]?.trim();
+                const cafe = bloco.match(/Café:([\s\S]*?)(?=Almoço:|$)/i)?.[1]?.trim();
+                const almoco = bloco.match(/Almoço:([\s\S]*?)(?=Jantar:|$)/i)?.[1]?.trim();
+                const janta = bloco.match(/Jantar:([\s\S]*?)$/i)?.[1]?.trim();
+
+                const diaHtml = `
+                    <div class="day-section" data-aos="fade-up">
+                        <div class="mb-8">
+                            <h2 class="text-4xl font-black text-slate-800">${nomeDia}</h2>
+                            <span class="kcal-badge bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-bold mt-2 inline-block">ESTIMATIVA: ${kcal}</span>
+                        </div>
+                        
+                        <div class="timeline-container px-4">
+                            <div class="timeline-line hidden md:block"></div>
+                            
+                            <div class="timeline-point mb-10 md:mb-0">
+                                <h4 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-wider">Café ☕</h4>
+                                <div class="point-dot"></div>
+                                <div class="point-content p-5 bg-white shadow-inner">${formatarReceita(cafe)}</div>
+                            </div>
+                            
+                            <div class="timeline-point mb-10 md:mb-0">
+                                <h4 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-wider">Almoço 🍽️</h4>
+                                <div class="point-dot"></div>
+                                <div class="point-content p-5 bg-white shadow-inner">${formatarReceita(almoco)}</div>
+                            </div>
+                            
+                            <div class="timeline-point">
+                                <h4 class="text-xs font-black text-slate-400 mb-3 uppercase tracking-wider">Jantar 🌙</h4>
+                                <div class="point-dot"></div>
+                                <div class="point-content p-5 bg-white shadow-inner">${formatarReceita(janta)}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.insertAdjacentHTML('beforeend', diaHtml);
+            });
+        }
+
+        function formatarReceita(texto) {
+            if(!texto) return "";
+            const linhas = texto.split('\n').filter(l => l.trim() !== "");
+            const titulo = linhas[0];
+            const ingredientes = linhas.slice(1);
+            
+            // Refinando a formatação da receita com classes Tailwind
+            return `
+                <div class="p-3 bg-emerald-50 rounded-xl mb-3 border border-emerald-100">
+                    <span class="recipe-title text-emerald-800 font-extrabold text-sm">${titulo}</span>
+                </div>
+                <ul class="meal-list space-y-2 mt-2">
+                    ${ingredientes.map(i => `<li class="text-slate-600 text-sm">${i.replace(/^[-*]\s*/, '')}</li>`).join('')}
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
